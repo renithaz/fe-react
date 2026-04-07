@@ -4,6 +4,7 @@ import viteLogo from "./assets/vite.svg";
 import heroImg from "./assets/hero.png";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // import "./App.css";
@@ -40,13 +41,14 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
+        <Route path="/dashboard" element={<DashboardPage />}></Route>
       </Routes>
     </Router>
-    /* <>
-      <RegisterPage />
-      <LoginPage />
-    </> */
   );
 }
+/* <>
+  <RegisterPage />
+  <LoginPage />
+</> */
 
 export default App;
