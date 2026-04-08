@@ -4,6 +4,26 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const NavbarComponent = () => {
+  const navigate = useNavigate("/login");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const handleLogout = () => {
+    Swal.fire({
+      title:"Logout?",
+      text: "are you sure to sign out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes, sign out",
+    }).then((result) => {
+      if (result.isConfirmed){
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/login");
+
+      }
+    })
+  }
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
@@ -13,10 +33,8 @@ const NavbarComponent = () => {
           <Nav className="me-auto">
             <Nav.Link href="#dashboard">Dashboard</Nav.Link>
             <Nav.Link href="#user">User</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Bambang</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.2">Logout</NavDropdown.Item>
+            <NavDropdown title={user?.name} id="basic-nav-dropdown"> 
+              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
