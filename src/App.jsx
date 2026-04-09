@@ -5,6 +5,8 @@ import heroImg from "./assets/hero.png";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import RolePage from "./pages/RolePage";
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // import "./App.css";
@@ -42,6 +44,7 @@ function App() {
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
         <Route path="/dashboard" element={<DashboardPage />}></Route>
+        <Route path="/role" element={<RolePage />}></Route>
       </Routes>
     </Router>
   );

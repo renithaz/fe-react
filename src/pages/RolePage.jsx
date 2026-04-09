@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   Container,
   Table,
@@ -32,7 +32,7 @@ const RolePage = () => {
   const handleClose = () => {
     setShow(false);
     setIsEdit(false);
-    setFormData({ name: ""});
+    setFormData({ name: "" });
     setErrors({});
   };
 
@@ -60,16 +60,16 @@ const RolePage = () => {
         Swal.fire("Success!", res.data.message, "success");
         handleClose();
         fetchRoles();
-        setFormData({ name: ""});
+        setFormData({ name: "" });
       } else {
         const res = await api.post("/roles", formData);
         Swal.fire("Success!", res.data.message, "success");
         handleClose();
         fetchRoles();
-        setFormData({ name: ""});
+        setFormData({ name: "" });
       }
     } catch (error) {
-      console.log(error.response.data.error);
+      console.log(error.response.data?.error);
       if (error.response && error.response.status === 422) {
         setErrors(error.response.data?.error);
       } else {
@@ -78,12 +78,11 @@ const RolePage = () => {
     }
   };
 
-  const handleEdit = (user) => {
-    console.log(user);
+  const handleEdit = (role) => {
     setIsEdit(true);
-    setCurrentId(user.id);
+    setCurrentId(role.id);
     setFormData({
-      name: user.name,
+      name: role?.name,
     });
 
     handleShow();
@@ -92,30 +91,31 @@ const RolePage = () => {
   const handleDelete = (id) => {
     Swal.fire({
       icon: "warning",
-      title: "Are you sure?",
-      text: "Delete data cannot be recoverd",
+      title: "Are you sure??",
+      text: "Deleted data cannot be recovered!",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it",
+      confirmButtonText: "Yes, Delete!",
       cancelButtonText: "Cancel",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await api.delete(`/users/${id}`);
+          const res = await api.delete(`/roles/${id}`);
           Swal.fire("Deleted", res.data.message, "success");
           fetchRoles();
         } catch (error) {
           console.log(error);
-          Swal.fire("Failed!", "Cannot deleted this data", "error");
+          Swal.fire("Failed!!", "Cannot deleted this data", "error");
         }
       }
     });
   };
 
   useEffect(() => {
+    // 1.apa yang mau dilakukan
     fetchRoles();
-  }, []);
+  }, []); //[]: cukup 1 kali perintah fetchUsers/users dijalankan
 
   return (
     <>
@@ -126,9 +126,9 @@ const RolePage = () => {
             <Card className="shadow-sm border-0 mt-3">
               <Card.Body>
                 <div className="d-flex justify-content-between mb-3">
-                  <h3>Data User</h3>
+                  <h3>Data Role</h3>
                   <Button variant="primary" onClick={handleShow}>
-                    Create New User
+                    Create New Role
                   </Button>
                 </div>
                 <Table striped bordered hover responsive>
@@ -141,25 +141,24 @@ const RolePage = () => {
                   </thead>
                   <tbody>
                     {roles.length > 0 ? (
-                      roles.map((user, index) => (
-                        <tr key={user.id}>
+                      roles.map((role, index) => (
+                        <tr key={role.id}>
                           <td>{index + 1}</td>
-                          <td>{user.name}</td>
-                          <td>{user.email}</td>
+                          <td>{role.name}</td>
                           <td>
                             <Button
                               variant="warning"
                               size="sm"
                               className="me-2"
-                              onClick={() => handleEdit(user)}
+                              onClick={() => handleEdit(role)}
                             >
                               Edit
                             </Button>
                             <Button
+                              onClick={() => handleDelete(role.id)}
                               variant="danger"
                               size="sm"
                               className="me-2"
-                              onClick={() => handleDelete(user.id)}
                             >
                               Delete
                             </Button>
@@ -175,10 +174,11 @@ const RolePage = () => {
                     )}
                   </tbody>
                 </Table>
+
                 <Modal show={show} onHide={handleClose}>
                   <Modal.Header closeButton>
                     <Modal.Title>
-                      {isEdit ? "Edit User" : "Create New User"}
+                      {isEdit ? "Edit Role" : "Create New Role"}
                     </Modal.Title>
                   </Modal.Header>
                   <Form onSubmit={handleSubmit}>
@@ -187,42 +187,14 @@ const RolePage = () => {
                         <Form.Label className="form-label">Name</Form.Label>
                         <Form.Control
                           value={formData?.name}
+                          onChange={handleChange}
                           isInvalid={!!errors?.name}
                           name="name"
                           type="text"
                           placeholder="Enter your name"
-                          onChange={handleChange}
                         ></Form.Control>
                         <Form.Control.Feedback type="invalid">
-                          {errors.name?.[0]}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="form-label">Email</Form.Label>
-                        <Form.Control
-                          value={formData?.email}
-                          isInvalid={!!errors?.email}
-                          name="email"
-                          type="email"
-                          placeholder="Enter your email"
-                          onChange={handleChange}
-                        ></Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                          {errors.email?.[0]}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="form-label">Password</Form.Label>
-                        <Form.Control
-                          value={formData?.password}
-                          isInvalid={!!errors?.password}
-                          name="password"
-                          type="password"
-                          placeholder="Enter your password"
-                          onChange={handleChange}
-                        ></Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                          {errors.password?.[0]}
+                          {errors?.name?.[0]}
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Modal.Body>
@@ -231,7 +203,7 @@ const RolePage = () => {
                         Close
                       </Button>
                       <Button variant="primary" type="submit">
-                        Save
+                        Save Changes
                       </Button>
                     </Modal.Footer>
                   </Form>
